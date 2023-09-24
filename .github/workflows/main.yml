@@ -20,12 +20,12 @@ jobs:
         docker exec opensuse_build zypper -n install gcc make ncurses-devel curl
         docker exec opensuse_build bash -c "curl https://sh.rustup.rs -sSf | sh -s -- -y"
         # Directly use the rustup binary path to add the target
+        docker exec opensuse_build zypper -n install musl-tools
         docker exec opensuse_build /root/.cargo/bin/rustup target add x86_64-unknown-linux-musl
-
+        
     - name: Build project with musl
       run: |
-        # Directly use the cargo binary path to build the project
-        docker exec opensuse_build bash -c "cd /workdir && /root/.cargo/bin/cargo build --release --target x86_64-unknown-linux-musl"
+        docker exec opensuse_build bash -c "cd /workdir && CC=musl-gcc /root/.cargo/bin/cargo build --release --target x86_64-unknown-linux-musl"
 
 
     - name: Save the binary as artifact
