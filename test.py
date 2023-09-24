@@ -74,7 +74,6 @@ class App:
                     self.filtered_options = [s for s in self.options if self.search_string in s]
                 else:
                     self.search_string += chr(key)
-
             else:
                 if key == curses.KEY_DOWN and self.current_option_idx < len(self.options) - 1:
                     self.current_option_idx += 1
@@ -87,6 +86,8 @@ class App:
                 elif key == ord('\n'):  # Enter key
                     if self.options[self.current_option_idx] not in self.selected_options:
                         self.selected_options.append(self.filtered_options[self.current_option_idx])
+                    else:
+                        self.selected_options = [s for s in self.selected_options if s != self.filtered_options[self.current_option_idx]]
                 elif key == ord('f'):
                     self.search_string = ''
                     self.search_mode = True
