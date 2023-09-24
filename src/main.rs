@@ -1,7 +1,7 @@
 use cursive::align::HAlign;
 use cursive::event::EventResult;
 use cursive::traits::*;
-use cursive::views::{Dialog, OnEventView, SelectView, TextView};
+use cursive::views::{Dialog, OnEventView, SelectView};
 use cursive::Cursive;
 
 mod tar;
