@@ -14,10 +14,11 @@ jobs:
       run: |
         docker pull alpine:latest
         docker run --name alpine_build -v $(pwd):/workdir -d alpine:latest sleep infinity
-
+    
     - name: Install dependencies and Rust
       run: |
-        docker exec alpine_build apk add --no-cache build-base ncurses-dev curl pkg-config
+        docker exec alpine_build apk --no-cache update
+        docker exec alpine_build apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/main build-base ncurses-dev curl pkg-config
         docker exec alpine_build sh -c "curl https://sh.rustup.rs -sSf | sh -s -- -y"
         docker exec alpine_build /root/.cargo/bin/rustup target add x86_64-unknown-linux-musl
 
