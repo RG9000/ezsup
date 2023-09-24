@@ -17,19 +17,19 @@ jobs:
 
     - name: Install dependencies and Rust
       run: |
-        docker exec alpine_build apk add --no-cache build-base ncurses-dev curl
+        docker exec alpine_build apk add --no-cache build-base ncurses-dev curl pkg-config
         docker exec alpine_build sh -c "curl https://sh.rustup.rs -sSf | sh -s -- -y"
         docker exec alpine_build /root/.cargo/bin/rustup target add x86_64-unknown-linux-musl
 
     - name: Build project with musl
       run: |
-        docker exec alpine_build sh -c "cd /workdir && LIBNCURSESW='-lncurses' /root/.cargo/bin/cargo build --release --target x86_64-unknown-linux-musl"
+        docker exec alpine_build sh -c "export PKG_CONFIG_PATH=/usr/lib/pkgconfig && cd /workdir && LIBNCURSES='-l:libncurses.a' /root/.cargo/bin/cargo build --release --target x86_64-unknown-linux-musl"
 
     - name: Save the binary as artifact
       uses: actions/upload-artifact@v2
       with:
-        name: my_rust_binary
-        path: target/x86_64-unknown-linux-musl/release/your_binary_name
+        name: ezsup
+        path: target/x86_64-unknown-linux-musl/release/ezsup
 
     - name: Cleanup Docker
       run: |
