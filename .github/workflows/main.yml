@@ -23,7 +23,7 @@ jobs:
 
     - name: Build project with musl
       run: |
-        docker exec opensuse_build bash -c "cd /workdir && ~/.cargo/bin/cargo build --release --target x86_64-unknown-linux-musl"
+        docker exec opensuse_build bash -c "PATH=$PATH:/root/.cargo/bin && cd /workdir && cargo build --release --target x86_64-unknown-linux-musl"
 
     - name: Save the binary as artifact
       uses: actions/upload-artifact@v2
