@@ -21,6 +21,11 @@ jobs:
         docker exec alpine_build sh -c "curl https://sh.rustup.rs -sSf | sh -s -- -y"
         docker exec alpine_build /root/.cargo/bin/rustup target add x86_64-unknown-linux-musl
 
+    - name: Check ncurses static library and pkg-config
+      run: |
+        docker exec alpine_build sh -c "ls /usr/lib/libncurses.a"
+        docker exec alpine_build sh -c "pkg-config --libs ncurses"
+
     - name: Build project with musl
       run: |
         docker exec alpine_build sh -c "export PKG_CONFIG_PATH=/usr/lib/pkgconfig && cd /workdir && LIBNCURSES='-l:libncurses.a' /root/.cargo/bin/cargo build --release --target x86_64-unknown-linux-musl"
