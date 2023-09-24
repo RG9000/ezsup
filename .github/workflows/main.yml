@@ -1,0 +1,37 @@
+name: Build Rust Project with ncurses on openSUSE
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker container
+      run: |
+        docker pull opensuse/leap:15.1
+        docker run --name opensuse_build -v $(pwd):/workdir -d opensuse/leap:15.1 sleep infinity
+
+    - name: Install dependencies and Rust
+      run: |
+        docker exec opensuse_build zypper -n install gcc make ncurses-devel curl
+        docker exec opensuse_build bash -c "curl https://sh.rustup.rs -sSf | sh -s -- -y"
+        docker exec opensuse_build ~/.cargo/bin/rustup target add x86_64-unknown-linux-musl
+
+    - name: Build project with musl
+      run: |
+        docker exec opensuse_build bash -c "cd /workdir && ~/.cargo/bin/cargo build --release --target x86_64-unknown-linux-musl"
+
+    - name: Save the binary as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: my_rust_binary
+        path: target/x86_64-unknown-linux-musl/release/ezsup
+
+    - name: Cleanup Docker
+      run: |
+        docker stop opensuse_build
+        docker rm opensuse_build
