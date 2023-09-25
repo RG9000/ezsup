@@ -24,7 +24,7 @@ class App:
         # Create search panel window with border
         self.search_win_height = curses.LINES  # minus borders and title
         self.search_win = curses.newwin(3, 38, self.left_win_height + 4, 1)
-        self.search_win.box()
+        self.search_win.border('x', 'x', 'x', 'x', 'x', 'x', 'x', 'x') 
 
         # Create right panel window with border
         self.right_win = curses.newwin(curses.LINES - 2, 38, 1, 40)
@@ -38,8 +38,8 @@ class App:
         # Clear the windows
         self.left_win.clear()
         self.right_win.clear()
-        self.left_win.box()
-        self.right_win.box()
+        self.left_win.border('x', 'x', 'x', 'x', 'x', 'x', 'x', 'x') 
+        self.right_win.border('x', 'x', 'x', 'x', 'x', 'x', 'x', 'x') 
         self.left_win.addstr(0, 2, 'Select log files for inclusion')
         self.right_win.addstr(0, 10, 'Selected files')
 
@@ -84,7 +84,7 @@ class App:
                     if self.current_option_idx < self.top_visible_idx:
                         self.top_visible_idx -= 1
                 elif key == ord('\n'):  # Enter key
-                    if self.options[self.current_option_idx] not in self.selected_options:
+                    if self.filtered_options[self.current_option_idx] not in self.selected_options:
                         self.selected_options.append(self.filtered_options[self.current_option_idx])
                     else:
                         self.selected_options = [s for s in self.selected_options if s != self.filtered_options[self.current_option_idx]]
